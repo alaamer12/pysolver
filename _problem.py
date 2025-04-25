@@ -6,20 +6,20 @@ This class should follow the ProblemProtocol interface.
 
 Example problem implementation (e.g., TSP):
 
-class TSPProblem:
+    class TSPProblem:
 
-    @property
-    def num_components(self) -> int:
+        @property
+        def num_components(self) -> int:
+            ...
+
+        def get_heuristic(self, i: int, j: int) -> float:
+            ...
+
+        def is_valid_solution(self, solution: List[int]) -> bool:
+            ...
+
+        def evaluate_solution(self, solution: List[int]) -> float:
         ...
-
-    def get_heuristic(self, i: int, j: int) -> float:
-        ...
-
-    def is_valid_solution(self, solution: List[int]) -> bool:
-        ...
-
-    def evaluate_solution(self, solution: List[int]) -> float:
-    ...
 """
 from dataclasses import dataclass
 from typing import List, Protocol
