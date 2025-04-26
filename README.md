@@ -12,12 +12,18 @@ This project implements three popular nature-inspired optimization algorithms:
 ```
 .
 ├── README.md               # Project documentation
-├── main.py                 # Main script with benchmarks and comparisons
-├── _aco.py                 # Ant Colony Optimization implementation
-├── _problem.py             # Problem definition interface
-├── __abc.py                # Artificial Bee Colony implementation 
-├── _pso.py                 # Particle Swarm Optimization implementation
-└── requirements.txt        # Project dependencies
+├── main.py                # Main script with benchmarks and comparisons
+├── feedback.py            # Logging and progress tracking utilities
+├── _aco.py               # Ant Colony Optimization implementation
+├── _problem.py           # Problem definition interface
+├── __abc.py             # Artificial Bee Colony implementation 
+├── _pso.py              # Particle Swarm Optimization implementation
+├── requirements.txt      # Project dependencies
+├── assets/              # Visualization and result assets
+│   └── aco/            # ACO-specific visualizations
+└── examples/           # Example implementations and notebooks
+    ├── continuous/     # Examples for continuous optimization
+    └── static/         # Static problem examples
 ```
 
 ## Installation
@@ -51,6 +57,49 @@ python main.py --algorithm abc
 # automatically detected best algorithm
 python main.py go
 ```
+
+### Using the Feedback Module
+
+The project includes a sophisticated feedback module for logging and progress tracking. Here's how to use it:
+
+#### Logging
+
+```python
+from feedback import log
+
+# Different logging levels
+log.debug("Debug information")
+log.info("General information")
+log.success("Operation completed successfully")
+log.warn("Warning message")
+log.error("Error occurred")
+log.critical("Critical error")
+```
+
+#### Progress Tracking
+
+```python
+from feedback import progress
+
+# Main progress bar (remains visible after completion)
+with progress.main("Optimization Progress", total=100) as main_pbar:
+    for i in range(100):
+        # Simple progress bar (vanishes after completion)
+        with progress.simple(f"Iteration {i+1}", total=50) as pbar:
+            for j in range(50):
+                # Your optimization code here
+                pbar.update(1)
+        main_pbar.update(1)
+```
+
+Progress bars features:
+- Main progress bars (`progress.main()`) - Remain visible after completion
+- Simple progress bars (`progress.simple()`) - Vanish after completion
+- Customizable colors, descriptions, and formats
+- Nested progress tracking support
+- Dynamic terminal width adaptation
+
+The feedback module provides global instances of both logger and progress tracker, properly configured and ready to use out of the box. No need to create instances manually.
 
 ## Algorithms Overview
 
@@ -97,6 +146,7 @@ Real life implementaions:
 
 ### Ant Colony Optimization (ACO)
 - [PyACO](https://github.com/ganyariya/PyACO) - A Python implementation of Ant Colony Optimization
+- [antsys](https://github.com/ganyariya/antsys) - Another Python library for Ant Colony Optimization, optimized to solve the Traveling Salesman Problem (TSP)
 
 ### Particle Swarm Optimization (PSO)
 - [PySwarms](https://github.com/ljvmiranda921/pyswarms) - A research toolkit for Particle Swarm Optimization in Python
