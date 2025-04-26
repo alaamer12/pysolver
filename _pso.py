@@ -92,3 +92,17 @@ def plot(history: List[float]) -> None:
     # - Plot average fitness over iterations
     # - Save or display results
     pass
+
+def compare(before_history: List[float], after_history: List[float],
+            before_solution: List[int] = None, after_solution: List[int] = None,
+            coordinates: List[Tuple[float, float]] = None,
+            before_pheromones: np.ndarray = None, after_pheromones: np.ndarray = None,
+            title: str = "Optimization Comparison", save_path: str = "aco_comparison.png") -> None:
+    """
+    Compare the results of two optimization runs.
+    """
+    # TODO: Implement comparison visualization:
+    # - Plot before and after histories
+    # - Plot pheromone levels if applicable
+    # - Save or display results
+    pass

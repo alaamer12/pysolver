@@ -125,7 +125,7 @@ class Logger:
     
     def success(self, message: str, *args, **kwargs):
         """Log a success message."""
-        self.log(LogLevel.SUCCESS, message, *args, **kwargs)
+        self.log(LogLevel.INFO, message, *args, **kwargs)
     
     def warn(self, message: str, *args, **kwargs):
         """Log a warning message."""
