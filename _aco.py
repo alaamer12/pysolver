@@ -846,7 +846,7 @@ def plot_pheromone_heatmap(pheromone_matrix: np.ndarray,
     mask = np.eye(pheromone_matrix.shape[0], dtype=bool)
 
     # Plot the heatmap with a better colormap and normalization
-    cmap = plt.cm.get_cmap()
+    cmap = plt.cm.viridis
 
     # Create a logarithmic normalization to better visualize pheromone distribution
     from matplotlib.colors import LogNorm
@@ -1003,7 +1003,7 @@ def compare(before_history: List[float], after_history: List[float],
         delta_pheromones = after_pheromones - before_pheromones
 
         # Plot the delta heatmap
-        cmap = plt.cm.ColormapRegistry['RdYlBu']  # Red for negative, blue for positive
+        cmap = plt.cm.RdBu_r  # Red for negative, blue for positive
         img = ax3.imshow(delta_pheromones, cmap=cmap, interpolation='nearest')
         plt.colorbar(img, ax=ax3, label='Pheromone Change (After - Before)')
 
