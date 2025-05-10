@@ -34,6 +34,7 @@ from typing import Tuple , List, Callable
 import numpy as np
 import random
 from  matplotlib import pyplot as plt
+from matplotlib import animation, cm
 from _problem import AlgConfig
 
 @dataclass
@@ -186,22 +187,18 @@ class ParticleSwarmOptimization:
 
 
 # Visualization functions
-def plot(history: List[float], avg_history: List[float] = None) -> None:
-    """
-    Plot the convergence of the algorithm over iterations.
-    """
+def plot_convergence(fitness_history, avg_fitness_history=None, title="PSO Convergence"):
+    """Plot the convergence of the PSO algorithm"""
     plt.figure(figsize=(10, 6))
-    plt.plot(history, label='Best Fitness', color='blue')
-    
-    if avg_history:
-        plt.plot(avg_history, label='Average Fitness', color='red', linestyle='--')
-    
-    plt.title('PSO Convergence')
+    plt.plot(fitness_history, 'b-', linewidth=2, label='Global Best Fitness')
+    if avg_fitness_history:
+        plt.plot(avg_fitness_history, 'r--', linewidth=1, label='Average Swarm Fitness')
     plt.xlabel('Iteration')
     plt.ylabel('Fitness Value')
+    plt.title(title)
     plt.legend()
     plt.grid(True)
-    plt.savefig('pso_convergence.png')
+    plt.yscale('log')  # Use log scale for better visualization
     plt.show()
 
 
@@ -272,4 +269,107 @@ def compare(before_history: List[float], after_history: List[float],
     
     plt.tight_layout()
     plt.savefig(save_path)
+    plt.show()
+
+
+def plot_2d_function(func, bounds, resolution=100, title="Function Surface"):
+    """Plot a 2D function surface"""
+    x = np.linspace(bounds[0][0], bounds[0][1], resolution)
+    y = np.linspace(bounds[1][0], bounds[1][1], resolution)
+    X, Y = np.meshgrid(x, y)
+    Z = np.zeros_like(X)
+
+    for i in range(resolution):
+        for j in range(resolution):
+            Z[i, j] = func([X[i, j], Y[i, j]])
+
+    fig = plt.figure(figsize=(12, 5))
+
+    # 3D Surface plot
+    ax1 = fig.add_subplot(1, 2, 1, projection='3d')
+    surface = ax1.plot_surface(X, Y, Z, cmap=cm.viridis, alpha=0.8)
+    ax1.set_xlabel('X')
+    ax1.set_ylabel('Y')
+    ax1.set_zlabel('f(X, Y)')
+    ax1.set_title(f'{title} - 3D View')
+    fig.colorbar(surface, ax=ax1, shrink=0.5, aspect=5)
+
+    # Contour plot
+    ax2 = fig.add_subplot(1, 2, 2)
+    contour = ax2.contourf(X, Y, Z, 50, cmap=cm.viridis)
+    ax2.set_xlabel('X')
+    ax2.set_ylabel('Y')
+    ax2.set_title(f'{title} - Contour View')
+    fig.colorbar(contour, ax=ax2)
+
+    plt.tight_layout()
+    plt.show()
+
+
+def visualize_pso_2d(func, bounds, position_history, global_best_pos, title="PSO Optimization"):
+    """Visualize PSO particles movement in 2D space"""
+    def sphere_function(x: List[float]) -> float:
+        return sum(xi**2 for xi in x)
+    def himmelblau_function(x: List[float]) -> float:
+        if len(x) != 2:
+            raise ValueError("Himmelblau function requires exactly 2 dimensions")
+        return (x[0]**2 + x[1] - 11)**2 + (x[0] + x[1]**2 - 7)**2
+    # Create function surface
+    resolution = 100
+    x = np.linspace(bounds[0][0], bounds[0][1], resolution)
+    y = np.linspace(bounds[1][0], bounds[1][1], resolution)
+    X, Y = np.meshgrid(x, y)
+    Z = np.zeros_like(X)
+
+    for i in range(resolution):
+        for j in range(resolution):
+            Z[i, j] = func([X[i, j], Y[i, j]])
+
+    # Plot settings
+    fig, ax = plt.subplots(figsize=(10, 8))
+    contour = ax.contourf(X, Y, Z, 50, cmap=cm.viridis, alpha=0.8)
+    fig.colorbar(contour, ax=ax)
+
+    # Plot particle positions for each iteration
+    colors = plt.cm.jet(np.linspace(0, 1, len(position_history)))
+
+    for i, positions in enumerate(position_history):
+        x_pos = [p[0] for p in positions]
+        y_pos = [p[1] for p in positions]
+
+        # Use smaller markers and decreasing alpha for earlier iterations
+        alpha = 0.3 + 0.7 * (i / len(position_history))
+        size = 10 + 40 * (i / len(position_history))
+
+        # Only plot some iterations to avoid cluttering
+        if i % max(1, len(position_history) // 10) == 0 or i == len(position_history) - 1:
+            ax.scatter(x_pos, y_pos, color=colors[i], s=size, alpha=alpha,
+                       edgecolors='k', linewidths=0.5, label=f'Iteration {i}')
+
+    # Mark the global best position
+    ax.scatter(global_best_pos[0], global_best_pos[1], color='red', s=200, marker='*',
+               edgecolors='k', linewidths=1.5, label='Global Best')
+
+    # Mark the true optimum if using a test function
+    if func == sphere_function:
+        ax.scatter(0, 0, color='white', s=200, marker='x', linewidths=2, label='True Optimum')
+    elif func == himmelblau_function:
+        # Himmelblau has four optima
+        optima = [(3.0, 2.0), (-2.805118, 3.131312), (-3.779310, -3.283186), (3.584428, -1.848126)]
+        for opt in optima:
+            ax.scatter(opt[0], opt[1], color='white', s=100, marker='+', linewidths=2)
+        ax.scatter([], [], color='white', s=100, marker='+', linewidths=2, label='True Optima')  # For legend
+
+    ax.set_xlabel('X')
+    ax.set_ylabel('Y')
+    ax.set_title(title)
+
+    # Show only a few iterations in the legend to avoid cluttering
+    handles, labels = ax.get_legend_handles_labels()
+    selected_indices = [i for i in range(len(labels)) if 'Iteration' not in labels[i] or
+                        int(labels[i].split()[-1]) in [0, len(position_history)//2, len(position_history)-1]]
+    ax.legend([handles[i] for i in selected_indices], [labels[i] for i in selected_indices],
+              loc='upper right')
+
+    plt.tight_layout()
     plt.show()
