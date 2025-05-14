@@ -35,7 +35,16 @@ import numpy as np
 import random
 from  matplotlib import pyplot as plt
 from matplotlib import animation, cm
-from _problem import AlgConfig
+
+@dataclass
+class AlgConfig:
+    """
+    Base class for algorithm configuration.
+    
+    This class can be extended for specific algorithms to include common parameters.
+    """
+    def __post_init__(self) -> None:
+        pass
 
 
 @dataclass
