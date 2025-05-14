@@ -1,34 +1,3 @@
-"""
-Particle Swarm Optimization (PSO) Algorithm Implementation
-
-This module implements the Particle Swarm Optimization algorithm for solving continuous optimization problems.
-PSO is inspired by social behavior of bird flocking or fish schooling, where particles move 
-in the search space based on their own experience and the experience of the swarm.
-
-Key components to implement:
-1. Particle representation (position, velocity)
-2. Personal best memory
-3. Global best memory
-4. Velocity update rule
-5. Position update rule
-
-Usage:
-    from _pso import ParticleSwarmOptimization
-    
-    # Define objective function to minimize
-    def objective_function(x):
-        return sum(x**2)  # Example: minimize sum of squares
-        
-    # Define bounds for each parameter
-    bounds = [(-5, 5), (-5, 5)]  # Example: 2D problem with bounds [-5, 5]
-    
-    # Create PSO instance
-    config = PSOConfig(objective_function=objective_function, bounds=bounds)
-    pso = ParticleSwarmOptimization(config)
-    
-    # Run optimization
-    best_position, best_fitness = pso.optimize()
-"""
 from dataclasses import dataclass
 from typing import Tuple, List, Callable    
 import numpy as np
@@ -139,60 +108,28 @@ class ParticleSwarmOptimization:
         self.fitness_history = []
         self.avg_fitness_history = []
         
-        # Initialize particles with progress bar
-        pbar = tqdm(
-            range(config.n_particles), 
-            desc="Initializing particles", 
-            colour="blue", 
-            leave=False,
-            ncols=100
-        )
-        for _ in pbar:
+        
+        for _ in tqdm(range(config.n_particles), desc="Initializing particles", leave=False):
             self.particles.append(Particle(config.bounds, config.n_dimensions))
             
     def optimize(self) -> Tuple[List[float], float, List[float], List[float]]:
         """Run the optimization algorithm"""
         
-        # Initial evaluation of particles with progress bar
-        pbar_init = tqdm(
-            self.particles, 
-            desc="Initial evaluation", 
-            colour="green", 
-            leave=False,
-            ncols=100
-        )
-        for particle in pbar_init:
+        for particle in tqdm(self.particles, desc="Initial evaluation", leave=False):
             fitness = particle.evaluate(self.config.objective_function)
             
             # Update global best if this particle is better
             if fitness < self.global_best_fitness:
                 self.global_best_fitness = fitness
                 self.global_best_position = particle.position.copy()
-                pbar_init.set_postfix({"best_fitness": f"{self.global_best_fitness:.6e}"})
         
-        # Main optimization loop with progress bar
-        main_pbar = tqdm(
-            range(self.config.iterations), 
-            desc="PSO Optimization", 
-            colour="cyan", 
-            leave=True,
-            ncols=100
-        )
-        
-        for i in main_pbar:
+        # Main optimization loop
+        for i in tqdm(range(self.config.iterations), desc="PSO optimization", leave=True):
             current_best_fitness = self.global_best_fitness
             total_fitness = 0
             
-            # Update particles with progress bar for one iteration
-            particle_pbar = tqdm(
-                self.particles, 
-                desc=f"Iteration {i+1}/{self.config.iterations}", 
-                colour="magenta", 
-                leave=False,
-                ncols=100
-            )
             
-            for particle in particle_pbar:
+            for particle in tqdm(self.particles, desc=f"Iteration {i+1}/{self.config.iterations}", leave=False):
                 particle.update_velocity(
                     self.global_best_position, 
                     self.config.w, 
@@ -204,27 +141,16 @@ class ParticleSwarmOptimization:
                 fitness = particle.evaluate(self.config.objective_function)
                 total_fitness += fitness
                 
-                # Update global best if this particle is better
+                
                 if fitness < self.global_best_fitness:
                     self.global_best_fitness = fitness
                     self.global_best_position = particle.position.copy()
-                    particle_pbar.set_postfix({"new_best": f"{self.global_best_fitness:.6e}"})
             
-            # Record history
+            
             self.fitness_history.append(self.global_best_fitness)
             self.avg_fitness_history.append(total_fitness / len(self.particles))
             
-            # Update main progress bar with current best fitness
-            main_pbar.set_postfix({
-                "best_fitness": f"{self.global_best_fitness:.6e}", 
-                "avg_fitness": f"{self.avg_fitness_history[-1]:.6e}"
-            })
             
-            # Highlight improvement in the main progress bar
-            if self.global_best_fitness < current_best_fitness:
-                main_pbar.set_description(f"PSO Optimization (Improved!)")
-            else:
-                main_pbar.set_description(f"PSO Optimization")
             
         return (
             self.global_best_position, 
@@ -327,15 +253,7 @@ def plot_2d_function(func, bounds, resolution=100, title="Function Surface"):
     X, Y = np.meshgrid(x, y)
     Z = np.zeros_like(X)
 
-    # Use tqdm to show progress while calculating function values
-    pbar = tqdm(
-        range(resolution), 
-        desc="Calculating function values", 
-        colour="yellow", 
-        leave=False,
-        ncols=100
-    )
-    for i in pbar:
+    for i in tqdm(range(resolution), desc="Calculating function values", leave=False):
         for j in range(resolution):
             Z[i, j] = func([X[i, j], Y[i, j]])
 
@@ -370,22 +288,14 @@ def visualize_pso_2d(func, bounds, position_history, global_best_pos, title="PSO
         if len(x) != 2:
             raise ValueError("Himmelblau function requires exactly 2 dimensions")
         return (x[0]**2 + x[1] - 11)**2 + (x[0] + x[1]**2 - 7)**2
-        
-    # Create function surface with progress bar
+    # Create function surface
     resolution = 100
     x = np.linspace(bounds[0][0], bounds[0][1], resolution)
     y = np.linspace(bounds[1][0], bounds[1][1], resolution)
     X, Y = np.meshgrid(x, y)
     Z = np.zeros_like(X)
 
-    pbar = tqdm(
-        range(resolution), 
-        desc="Generating visualization surface", 
-        colour="green", 
-        leave=False,
-        ncols=100
-    )
-    for i in pbar:
+    for i in tqdm(range(resolution), desc="Generating visualization surface", leave=False):
         for j in range(resolution):
             Z[i, j] = func([X[i, j], Y[i, j]])
 
@@ -394,19 +304,11 @@ def visualize_pso_2d(func, bounds, position_history, global_best_pos, title="PSO
     contour = ax.contourf(X, Y, Z, 50, cmap=cm.viridis, alpha=0.8)
     fig.colorbar(contour, ax=ax)
 
-    # Plot particle positions for each iteration with progress bar
+    # Plot particle positions for each iteration
     colors = plt.cm.jet(np.linspace(0, 1, len(position_history)))
 
-    pos_pbar = tqdm(
-        enumerate(position_history),
-        total=len(position_history),
-        desc="Plotting particle positions",
-        colour="cyan",
-        leave=False,
-        ncols=100
-    )
-    
-    for i, positions in pos_pbar:
+    for i in tqdm(range(len(position_history)), desc="Plotting iterations", leave=False):
+        positions = position_history[i]
         x_pos = [p[0] for p in positions]
         y_pos = [p[1] for p in positions]
 
