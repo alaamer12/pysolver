@@ -11,10 +11,15 @@ from pysolver._aco import ACO, ACOConfig, plot, plot_solution, compare, plot_phe
 from pysolver._problem import ProblemProtocol, AlgConfig
 from pysolver.__abc import ABC, ABCConfig
 from pysolver._pso import ParticleSwarmOptimization, PSOConfig, plot_2d_function
+from pysolver.feedback import Logger
+
+# Create a default logger instance that can be imported directly
+log = Logger(name="PySolver")
 
 __all__ = [
     'ACO', 'ACOConfig', 'plot', 'plot_solution', 'compare', 'plot_pheromone_heatmap',
     'ProblemProtocol', 'AlgConfig',
     'ABC', 'ABCConfig',
-    'ParticleSwarmOptimization', 'PSOConfig', 'plot_2d_function'
+    'ParticleSwarmOptimization', 'PSOConfig', 'plot_2d_function',
+    'log'
 ] 

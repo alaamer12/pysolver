@@ -28,13 +28,16 @@ Usage:
 import copy
 import random
 from dataclasses import dataclass, field
-from typing import List, Dict, Optional, Tuple, Set, TypeVar, Generic
+from typing import List, Dict, Optional, Tuple, Set, TypeVar, Generic, Callable, Any
 
-import matplotlib.pyplot as plt
 import numpy as np
+import matplotlib.pyplot as plt
 
-from pysolver._problem import AlgConfig, ProblemProtocol
-from pysolver.feedback import log, progress
+from pysolver._problem import ProblemProtocol, AlgConfig
+from pysolver.feedback import Logger, progress
+
+# Create a logger instance for this module
+log = Logger(name="ACO")
 
 # Type variable for generic Node content
 T = TypeVar('T')

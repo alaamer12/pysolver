@@ -31,23 +31,39 @@ Usage:
 """
 from dataclasses import dataclass
 from typing import List, Callable, Tuple
+import numpy as np  # Added missing import
 
 from pysolver._problem import AlgConfig
 
 
 @dataclass
 class ABCConfig(AlgConfig):
-    objective_function: Callable[[List[float]], float]
-    bounds: List[Tuple[float, float]]
-    colony_size: int = 30
-    iterations: int = 100
-    limit: int = 20
+    pass
+    # objective_function: Callable[[List[float]], float]
+    # bounds: List[Tuple[float, float]]
+    # colony_size: int = 30
+    # iterations: int = 100
+    # limit: int = 20
 
-    def __post_init__(self) -> None:
-        super().__post_init__()
-        if self.colony_size <= 0 <= 0 or self.limit <= 0:
-            raise ValueError("Colony size and limit must be positive integers.")
+    # def __post_init__(self) -> None:
+    #     super().__post_init__()
+    #     if self.colony_size <= 0 or self.limit <= 0:  # Fixed typo in the condition
+    #         raise ValueError("Colony size and limit must be positive integers.")
 
+
+class ABC:  # Changed class name to match import in __init__.py
+    """
+    Main ABC algorithm implementation.
+    
+    Manages the colony of bees (employed, onlooker, scout) and the optimization process.
+    """
+    def __init__(self, config: ABCConfig):
+        self.config = config
+        # TODO: Initialize population of food sources
+        
+    def optimize(self):
+        # TODO: Implement optimization logic
+        pass
 
 
 class FoodSource:
@@ -61,22 +77,6 @@ class FoodSource:
     # - Calculate and store fitness
     # - Track trial counter for abandonment
     # - Implement neighborhood search
-    pass
-
-
-class ArtificialBeeColony:
-    """
-    Main ABC algorithm implementation.
-    
-    Manages the colony of bees (employed, onlooker, scout) and the optimization process.
-    """
-    # TODO: Implement the following:
-    # - Initialize population of food sources
-    # - Implement employed bee phase
-    # - Implement onlooker bee phase
-    # - Implement scout bee phase
-    # - Implement main optimization loop
-    # - Track and return best solution
     pass
 
 
