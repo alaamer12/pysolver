@@ -32,7 +32,7 @@ Usage:
 from dataclasses import dataclass
 from typing import List, Callable, Tuple
 
-from _problem import AlgConfig
+from pysolver._problem import AlgConfig
 
 
 @dataclass

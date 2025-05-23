@@ -33,8 +33,8 @@ from typing import List, Dict, Optional, Tuple, Set, TypeVar, Generic
 import matplotlib.pyplot as plt
 import numpy as np
 
-from _problem import AlgConfig, ProblemProtocol
-from feedback import log, progress
+from pysolver._problem import AlgConfig, ProblemProtocol
+from pysolver.feedback import log, progress
 
 # Type variable for generic Node content
 T = TypeVar('T')

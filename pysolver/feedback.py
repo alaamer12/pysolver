@@ -16,8 +16,7 @@ from enum import Enum
 import os
 
 # Use colorama for cross-platform terminal colors
-from colorama import init, Fore, Back, Style
-from tqdm import tqdm
+from colorama import init, Fore, Style
 from tqdm.auto import tqdm as auto_tqdm
 
 # Initialize colorama

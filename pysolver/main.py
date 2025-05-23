@@ -16,7 +16,7 @@ import argparse
 from enum import Enum, auto
 from typing import Dict, Type
 
-from _problem import AlgConfig
+from pysolver._problem import AlgConfig
 
 
 class Algorithms(Enum):

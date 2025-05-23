@@ -3,7 +3,7 @@ from typing import Tuple, List, Callable
 import numpy as np
 import random
 from matplotlib import pyplot as plt
-from matplotlib import animation, cm
+from matplotlib import cm
 from tqdm.auto import tqdm
 
 @dataclass
@@ -108,10 +108,6 @@ class ParticleSwarmOptimization:
         self.fitness_history = []
         self.avg_fitness_history = []
         
-<<<<<<< HEAD:pysolver/_pso.py
-        
-        for _ in tqdm(range(config.n_particles), desc="Initializing particles", leave=False):
-||||||| parent of 5907e0e (Update _pso.py):_pso.py
         
         for _ in tqdm(range(config.n_particles), desc="Initializing particles", leave=False):
             self.particles.append(Particle(config.bounds, config.n_dimensions))
@@ -126,12 +122,7 @@ class ParticleSwarmOptimization:
             if fitness < self.global_best_fitness:
                 self.global_best_fitness = fitness
                 self.global_best_position = particle.position.copy()
-                pbar_init.set_postfix({"best_fitness": f"{self.global_best_fitness:.6e}"})
         
-<<<<<<< HEAD:pysolver/_pso.py
-        # Main optimization loop
-        for i in tqdm(range(self.config.iterations), desc="PSO optimization", leave=True):
-||||||| parent of 5907e0e (Update _pso.py):_pso.py
         # Main optimization loop
         for i in tqdm(range(self.config.iterations), desc="PSO optimization", leave=True):
             current_best_fitness = self.global_best_fitness
@@ -150,41 +141,16 @@ class ParticleSwarmOptimization:
                 fitness = particle.evaluate(self.config.objective_function)
                 total_fitness += fitness
                 
-<<<<<<< HEAD:pysolver/_pso.py
                 
-                
-||||||| parent of 5907e0e (Update _pso.py):_pso.py
-                
-=======
-                # Update global best if this particle is better
->>>>>>> 5907e0e (Update _pso.py):_pso.py
                 if fitness < self.global_best_fitness:
                     self.global_best_fitness = fitness
                     self.global_best_position = particle.position.copy()
-                    particle_pbar.set_postfix({"new_best": f"{self.global_best_fitness:.6e}"})
-            
-<<<<<<< HEAD:pysolver/_pso.py
             
             
-||||||| parent of 5907e0e (Update _pso.py):_pso.py
-            
-=======
-            # Record history
->>>>>>> 5907e0e (Update _pso.py):_pso.py
             self.fitness_history.append(self.global_best_fitness)
             self.avg_fitness_history.append(total_fitness / len(self.particles))
             
-            # Update main progress bar with current best fitness
-            main_pbar.set_postfix({
-                "best_fitness": f"{self.global_best_fitness:.6e}", 
-                "avg_fitness": f"{self.avg_fitness_history[-1]:.6e}"
-            })
             
-            # Highlight improvement in the main progress bar
-            if self.global_best_fitness < current_best_fitness:
-                main_pbar.set_description(f"PSO Optimization (Improved!)")
-            else:
-                main_pbar.set_description(f"PSO Optimization")
             
         return (
             self.global_best_position, 
@@ -322,15 +288,7 @@ def visualize_pso_2d(func, bounds, position_history, global_best_pos, title="PSO
         if len(x) != 2:
             raise ValueError("Himmelblau function requires exactly 2 dimensions")
         return (x[0]**2 + x[1] - 11)**2 + (x[0] + x[1]**2 - 7)**2
-<<<<<<< HEAD:pysolver/_pso.py
     # Create function surface
-    # Create function surface
-||||||| parent of 5907e0e (Update _pso.py):_pso.py
-    # Create function surface
-=======
-        
-    # Create function surface with progress bar
->>>>>>> 5907e0e (Update _pso.py):_pso.py
     resolution = 100
     x = np.linspace(bounds[0][0], bounds[0][1], resolution)
     y = np.linspace(bounds[1][0], bounds[1][1], resolution)
@@ -346,14 +304,7 @@ def visualize_pso_2d(func, bounds, position_history, global_best_pos, title="PSO
     contour = ax.contourf(X, Y, Z, 50, cmap=cm.viridis, alpha=0.8)
     fig.colorbar(contour, ax=ax)
 
-<<<<<<< HEAD:pysolver/_pso.py
     # Plot particle positions for each iteration
-    # Plot particle positions for each iteration
-||||||| parent of 5907e0e (Update _pso.py):_pso.py
-    # Plot particle positions for each iteration
-=======
-    # Plot particle positions for each iteration with progress bar
->>>>>>> 5907e0e (Update _pso.py):_pso.py
     colors = plt.cm.jet(np.linspace(0, 1, len(position_history)))
 
     for i in tqdm(range(len(position_history)), desc="Plotting iterations", leave=False):
