@@ -8,8 +8,9 @@ from typing import List, Tuple
 
 import numpy as np
 
-from _aco import ACO, ACOConfig, plot, plot_solution
-from _problem import ProblemProtocol
+from pysolver import ACO, ACOConfig, plot, plot_solution, plot_pheromone_heatmap
+from pysolver import ProblemProtocol
+from pysolver import log
 
 
 class TSPProblem(ProblemProtocol):
@@ -201,9 +202,6 @@ def main():
     # Calculate improvement percentage
     improvement = (initial_quality - optimized_quality) / initial_quality * 100
     print(f"\nImprovement: {improvement:.2f}%")
-
-    # Visualize the comparison
-    from _aco import compare, plot_pheromone_heatmap
     
     # Visualize individual results
     plot(initial_history, title="Initial Configuration Convergence", save_path="initial_convergence.png")
