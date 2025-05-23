@@ -20,6 +20,7 @@ This project implements three popular nature-inspired optimization algorithms:
 ├── requirements.txt        # Project dependencies
 ├── assets/                 # Visualization and result assets
 │   ├── aco/               # ACO-specific visualizations
+│   ├── abc/               # ABC-specific visualizations
 │   └── pso/               # PSO-specific visualizations
 ├── docs/                   # Documentation and presentations
 └── examples/               # Example implementations and notebooks
@@ -146,18 +147,50 @@ ACO features:
 
 ### Artificial Bee Colony (ABC)
 
-ABC uses three types of bees (employed bees, onlooker bees, and scout bees) to search for optimal food sources, balancing exploration and exploitation.
+ABC simulates the foraging behavior of honey bees, using three types of bees (employed bees, onlooker bees, and scout bees) to efficiently search for optimal food sources. This algorithm is particularly effective for continuous function optimization problems.
 
 Key parameters:
-- `colony_size` - Number of food sources/employed bees (typical values: 20-100)
+- `colony_size` - Total number of bees in the colony (typical values: 20-100)
+- `employed_ratio` - Proportion of employed bees to total colony (typical value: 0.5)
 - `limit` - Maximum trials before abandonment (typical values: 10-50)
+- `mutation_rate` - Controls neighborhood search size (typical values: 0.5-2.0)
 - `iterations` - Number of optimization cycles
 
 ABC features:
 - Neighborhood search through employed bees
-- Selection of promising regions through onlooker bees
-- Exploration of new regions through scout bees
-- Self-organizing and adaptive search
+- Selection of promising regions through onlooker bees via fitness-proportionate selection
+- Exploration of new regions through scout bees when food sources are exhausted
+- Balance between exploitation and exploration through the three bee types
+- Effective for high-dimensional continuous optimization problems
+- Robust against local optima in multimodal functions
+
+Example usage:
+```python
+from pysolver import ABC, ABCConfig
+
+# Define your objective function
+def sphere_function(x):
+    return sum(xi**2 for xi in x)
+
+# Configure the ABC algorithm
+config = ABCConfig(
+    objective_function=sphere_function,
+    bounds=[(-5, 5)] * 10,  # 10-dimensional problem with bounds [-5, 5]
+    colony_size=30,
+    limit=20,
+    iterations=200,
+    mutation_rate=1.0,
+    minimize=True  # Set to False for maximization problems
+)
+
+# Create ABC instance and optimize
+abc = ABC(config)
+best_position, best_value, history = abc.optimize()
+
+# Display results
+print(f"Best solution: {best_position}")
+print(f"Best value: {best_value}")
+```
 
 ### Particle Swarm Optimization (PSO)
 
@@ -188,6 +221,7 @@ For detailed experimental results, benchmarks, and visualizations, see the [EXPE
 - Pandas - For data manipulation
 - Matplotlib - For data visualization
 - tqdm - For progress tracking
+- colorama - For terminal output styling
 
 ## References
 
@@ -202,6 +236,7 @@ For detailed experimental results, benchmarks, and visualizations, see the [EXPE
 
 #### Artificial Bee Colony (ABC)
 - [BeeColPy](https://github.com/renard162/BeeColPy) - A Python implementation of the Artificial Bee Colony algorithm
+- [pyABC](https://github.com/bischtob/pyabc) - A framework for Artificial Bee Colony optimization
 
 ## Documentation
 
