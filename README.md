@@ -2,28 +2,29 @@
 
 This project implements three popular nature-inspired optimization algorithms:
 
-1. **Ant Colony Optimization (ACO)** - Inspired by the foraging behavior of ants
-2. **Artificial Bee Colony (ABC)** - Based on the intelligent foraging behavior of honey bees
-3. **Particle Swarm Optimization (PSO)** - Mimics the social behavior of bird flocking or fish schooling
-
+1. **Ant Colony Optimization (ACO)** - Inspired by the foraging behavior of ants, excellent for discrete optimization problems
+2. **Artificial Bee Colony (ABC)** - Based on the intelligent foraging behavior of honey bees, suitable for continuous optimization
+3. **Particle Swarm Optimization (PSO)** - Mimics the social behavior of bird flocking or fish schooling, ideal for continuous optimization
 
 ## Project Structure
 
 ```
 .
 ├── README.md               # Project documentation
-├── main.py                # Main script with benchmarks and comparisons
-├── feedback.py            # Logging and progress tracking utilities
-├── _aco.py               # Ant Colony Optimization implementation
-├── _problem.py           # Problem definition interface
-├── __abc.py             # Artificial Bee Colony implementation 
-├── _pso.py              # Particle Swarm Optimization implementation
-├── requirements.txt      # Project dependencies
-├── assets/              # Visualization and result assets
-│   └── aco/            # ACO-specific visualizations
-└── examples/           # Example implementations and notebooks
-    ├── continuous/     # Examples for continuous optimization
-    └── static/         # Static problem examples
+├── main.py                 # Main script with benchmarks and comparisons
+├── feedback.py             # Logging and progress tracking utilities
+├── _aco.py                 # Ant Colony Optimization implementation
+├── _problem.py             # Problem definition interface
+├── __abc.py                # Artificial Bee Colony implementation 
+├── _pso.py                 # Particle Swarm Optimization implementation
+├── requirements.txt        # Project dependencies
+├── assets/                 # Visualization and result assets
+│   ├── aco/               # ACO-specific visualizations
+│   └── pso/               # PSO-specific visualizations
+├── docs/                   # Documentation and presentations
+└── examples/               # Example implementations and notebooks
+    ├── continuous/        # Examples for continuous optimization
+    └── static/            # Static problem examples
 ```
 
 ## Installation
@@ -37,7 +38,8 @@ This project implements three popular nature-inspired optimization algorithms:
 2. Create and activate a virtual environment (optional but recommended):
    ```bash
    python -m venv .venv
-   .venv\Scripts\activate 
+   .venv\Scripts\activate  # Windows
+   source .venv/bin/activate  # Linux/macOS
    ```
 
 3. Install dependencies:
@@ -50,17 +52,41 @@ This project implements three popular nature-inspired optimization algorithms:
 ### Running a Specific Algorithm
 
 ```bash
+# Run PSO algorithm with custom parameters
 python main.py --algorithm pso --kwargs
 
+# Run ABC algorithm with default parameters
 python main.py --algorithm abc 
 
-# automatically detected best algorithm
+# Auto-detect and use the best algorithm for your problem
 python main.py go
+```
+
+### Defining Your Own Problem
+
+To use these optimization algorithms with your own problem, implement the `ProblemProtocol` interface from `_problem.py`:
+
+```python
+from _problem import ProblemProtocol
+
+class MyProblem(ProblemProtocol):
+    @property
+    def num_components(self) -> int:
+        # Return the number of components in your problem
+        
+    def get_heuristic(self, i: int, j: int) -> float:
+        # Return the heuristic value between components i and j
+        
+    def is_valid_solution(self, solution: List[int]) -> bool:
+        # Check if a solution is valid
+        
+    def evaluate_solution(self, solution: List[int]) -> float:
+        # Evaluate the quality of a solution
 ```
 
 ### Using the Feedback Module
 
-The project includes a sophisticated feedback module for logging and progress tracking. Here's how to use it:
+The project includes a sophisticated feedback module for logging and progress tracking:
 
 #### Logging
 
@@ -99,8 +125,6 @@ Progress bars features:
 - Nested progress tracking support
 - Dynamic terminal width adaptation
 
-The feedback module provides global instances of both logger and progress tracker, properly configured and ready to use out of the box. No need to create instances manually.
-
 ## Algorithms Overview
 
 ### Ant Colony Optimization (ACO)
@@ -108,30 +132,54 @@ The feedback module provides global instances of both logger and progress tracke
 ACO is particularly effective for discrete optimization problems like the Traveling Salesman Problem (TSP). The algorithm works by simulating ants leaving pheromone trails as they search for efficient paths.
 
 Key parameters:
-- `alpha` - Pheromone importance
-- `beta` - Heuristic information importance
-- `evaporation_rate` - Controls pheromone decay
-- `n_ants` - Number of ants in the colony
+- `alpha` - Pheromone importance (typical values: 1.0-3.0)
+- `beta` - Heuristic information importance (typical values: 2.0-5.0)
+- `evaporation_rate` - Controls pheromone decay (typical values: 0.1-0.5)
+- `n_ants` - Number of ants in the colony (typical values: 10-100)
+- `iterations` - Number of optimization cycles
+
+ACO features:
+- Probabilistic decision making based on pheromone levels and heuristic information
+- Reinforcement learning through pheromone deposits
+- Implicit parallelism through multiple ant agents
+- Sophisticated visualization tools for solution paths and pheromone levels
 
 ### Artificial Bee Colony (ABC)
 
-ABC uses three types of bees (employed bees, onlooker bees, and scout bees) to search for the optimal solution, balancing exploration and exploitation.
+ABC uses three types of bees (employed bees, onlooker bees, and scout bees) to search for optimal food sources, balancing exploration and exploitation.
 
 Key parameters:
-- `colony_size` - Number of food sources/employed bees
-- `limit` - Maximum trials before abandonment
-- `max_iterations` - Number of optimization cycles
+- `colony_size` - Number of food sources/employed bees (typical values: 20-100)
+- `limit` - Maximum trials before abandonment (typical values: 10-50)
+- `iterations` - Number of optimization cycles
+
+ABC features:
+- Neighborhood search through employed bees
+- Selection of promising regions through onlooker bees
+- Exploration of new regions through scout bees
+- Self-organizing and adaptive search
 
 ### Particle Swarm Optimization (PSO)
 
 PSO uses particles that move through the solution space, influenced by their own best known position and the swarm's best known position.
 
 Key parameters:
-- `w` - Inertia weight
-- `c1` - Cognitive coefficient (personal best)
-- `c2` - Social coefficient (global best)
-- `n_particles` - Number of particles in the swarm
+- `w` - Inertia weight (typical values: 0.4-0.9)
+- `c1` - Cognitive coefficient - personal best (typical values: 1.0-2.5)
+- `c2` - Social coefficient - global best (typical values: 1.0-2.5)
+- `n_particles` - Number of particles in the swarm (typical values: 10-50)
+- `iterations` - Number of optimization cycles
 
+PSO features:
+- Simple implementation with powerful optimization capabilities
+- Excellent for continuous optimization problems
+- Balance between exploration and exploitation through velocity update
+- No gradient information required
+- Effective for high-dimensional problems
+
+## Experiment Results
+
+For detailed experimental results, benchmarks, and visualizations, see the [EXPERIMENTS.md](EXPERIMENTS.md) file.
 
 ## Requirements
 
@@ -139,17 +187,22 @@ Key parameters:
 - NumPy - For numerical operations
 - Pandas - For data manipulation
 - Matplotlib - For data visualization
+- tqdm - For progress tracking
 
 ## References
 
-Real life implementaions:
+### Real-life implementations
 
-### Ant Colony Optimization (ACO)
+#### Ant Colony Optimization (ACO)
 - [PyACO](https://github.com/ganyariya/PyACO) - A Python implementation of Ant Colony Optimization
 - [antsys](https://github.com/ganyariya/antsys) - Another Python library for Ant Colony Optimization, optimized to solve the Traveling Salesman Problem (TSP)
 
-### Particle Swarm Optimization (PSO)
+#### Particle Swarm Optimization (PSO)
 - [PySwarms](https://github.com/ljvmiranda921/pyswarms) - A research toolkit for Particle Swarm Optimization in Python
 
-### Artificial Bee Colony (ABC)
+#### Artificial Bee Colony (ABC)
 - [BeeColPy](https://github.com/renard162/BeeColPy) - A Python implementation of the Artificial Bee Colony algorithm
+
+## Documentation
+
+A detailed presentation about the project and algorithms can be found in the `docs` folder or [view online](https://www.canva.com/design/DAGk6GZUskE/jvIR0tYTOLtgYwQGMYs0YA/view).

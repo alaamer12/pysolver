@@ -1,6 +1,5 @@
 numpy
-pandas
 matplotlib
 tqdm 
 # scipy # Optional
-# scikit-learn # Optional
+scikit-learn
