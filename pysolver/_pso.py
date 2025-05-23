@@ -1,21 +1,12 @@
 from dataclasses import dataclass
-from typing import Tuple, List, Callable    
+from typing import NoReturn, Tuple, List, Callable    
 import numpy as np
 import random
 from matplotlib import pyplot as plt
 from matplotlib import cm
 from tqdm.auto import tqdm
 
-@dataclass
-class AlgConfig:
-    """
-    Base class for algorithm configuration.
-    
-    This class can be extended for specific algorithms to include common parameters.
-    """
-    def __post_init__(self) -> None:
-        pass
-
+from pysolver._problem import ProblemProtocol, AlgConfig
 
 @dataclass
 class PSOConfig(AlgConfig):
@@ -23,10 +14,38 @@ class PSOConfig(AlgConfig):
     bounds: List[tuple[float, float]]
     n_dimensions: int = None
     n_particles: int = 30
-    iterations: int = 100
     w: float = 0.5
     c1: float = 2.0
     c2: float = 2.0
+
+    def __init__(self, problem: ProblemProtocol, **kwargs):
+        # Extract iterations from kwargs or use default
+        iterations = kwargs.get('iterations', 100)
+
+        # Initialize AlgConfig with required parameters
+        super().__init__(iterations=iterations)
+
+        # Store the problem directly
+        self.problem = problem
+
+        # Set all the parameters from kwargs
+        for key, value in kwargs.items():
+            if hasattr(self, key):
+                setattr(self, key, value)
+
+        self.validate_parameters()
+
+    def validate_parameters(self) -> NoReturn:
+        """Validate configuration parameters."""
+        if self.n_particles <= 1:
+            raise ValueError("Number of particles must be greater than 1.")
+        if self.w <= 0 or self.w > 1:
+            raise ValueError("Inertia weight must be between 0 and 1.")
+        if self.c1 <= 0 or self.c2 <= 0:
+            raise ValueError("Acceleration coefficients must be greater than 0.")
+        if len(self.bounds) == 0:
+            raise ValueError("Bounds must be specified.")
+
 
     def __post_init__(self) -> None:
         super().__post_init__()
