@@ -113,38 +113,13 @@ class ParticleSwarmOptimization:
         for _ in tqdm(range(config.n_particles), desc="Initializing particles", leave=False):
 ||||||| parent of 5907e0e (Update _pso.py):_pso.py
         
-        for _ in range(config.n_particles):
-=======
-        # Initialize particles with progress bar
-        pbar = tqdm(
-            range(config.n_particles), 
-            desc="Initializing particles", 
-            colour="blue", 
-            leave=False,
-            ncols=100
-        )
-        for _ in pbar:
->>>>>>> 5907e0e (Update _pso.py):_pso.py
+        for _ in tqdm(range(config.n_particles), desc="Initializing particles", leave=False):
             self.particles.append(Particle(config.bounds, config.n_dimensions))
             
     def optimize(self) -> Tuple[List[float], float, List[float], List[float]]:
         """Run the optimization algorithm"""
         
-<<<<<<< HEAD:pysolver/_pso.py
         for particle in tqdm(self.particles, desc="Initial evaluation", leave=False):
-||||||| parent of 5907e0e (Update _pso.py):_pso.py
-        for particle in self.particles:
-=======
-        # Initial evaluation of particles with progress bar
-        pbar_init = tqdm(
-            self.particles, 
-            desc="Initial evaluation", 
-            colour="green", 
-            leave=False,
-            ncols=100
-        )
-        for particle in pbar_init:
->>>>>>> 5907e0e (Update _pso.py):_pso.py
             fitness = particle.evaluate(self.config.objective_function)
             
             # Update global best if this particle is better
@@ -158,38 +133,12 @@ class ParticleSwarmOptimization:
         for i in tqdm(range(self.config.iterations), desc="PSO optimization", leave=True):
 ||||||| parent of 5907e0e (Update _pso.py):_pso.py
         # Main optimization loop
-        for i in range(self.config.iterations):
-=======
-        # Main optimization loop with progress bar
-        main_pbar = tqdm(
-            range(self.config.iterations), 
-            desc="PSO Optimization", 
-            colour="cyan", 
-            leave=True,
-            ncols=100
-        )
-        
-        for i in main_pbar:
->>>>>>> 5907e0e (Update _pso.py):_pso.py
+        for i in tqdm(range(self.config.iterations), desc="PSO optimization", leave=True):
             current_best_fitness = self.global_best_fitness
             total_fitness = 0
             
-            # Update particles with progress bar for one iteration
-            particle_pbar = tqdm(
-                self.particles, 
-                desc=f"Iteration {i+1}/{self.config.iterations}", 
-                colour="magenta", 
-                leave=False,
-                ncols=100
-            )
             
-<<<<<<< HEAD:pysolver/_pso.py
             for particle in tqdm(self.particles, desc=f"Iteration {i+1}/{self.config.iterations}", leave=False):
-||||||| parent of 5907e0e (Update _pso.py):_pso.py
-            for particle in self.particles:
-=======
-            for particle in particle_pbar:
->>>>>>> 5907e0e (Update _pso.py):_pso.py
                 particle.update_velocity(
                     self.global_best_position, 
                     self.config.w, 
@@ -338,21 +287,7 @@ def plot_2d_function(func, bounds, resolution=100, title="Function Surface"):
     X, Y = np.meshgrid(x, y)
     Z = np.zeros_like(X)
 
-<<<<<<< HEAD:pysolver/_pso.py
     for i in tqdm(range(resolution), desc="Calculating function values", leave=False):
-||||||| parent of 5907e0e (Update _pso.py):_pso.py
-    for i in range(resolution):
-=======
-    # Use tqdm to show progress while calculating function values
-    pbar = tqdm(
-        range(resolution), 
-        desc="Calculating function values", 
-        colour="yellow", 
-        leave=False,
-        ncols=100
-    )
-    for i in pbar:
->>>>>>> 5907e0e (Update _pso.py):_pso.py
         for j in range(resolution):
             Z[i, j] = func([X[i, j], Y[i, j]])
 
@@ -402,20 +337,7 @@ def visualize_pso_2d(func, bounds, position_history, global_best_pos, title="PSO
     X, Y = np.meshgrid(x, y)
     Z = np.zeros_like(X)
 
-<<<<<<< HEAD:pysolver/_pso.py
     for i in tqdm(range(resolution), desc="Generating visualization surface", leave=False):
-||||||| parent of 5907e0e (Update _pso.py):_pso.py
-    for i in range(resolution):
-=======
-    pbar = tqdm(
-        range(resolution), 
-        desc="Generating visualization surface", 
-        colour="green", 
-        leave=False,
-        ncols=100
-    )
-    for i in pbar:
->>>>>>> 5907e0e (Update _pso.py):_pso.py
         for j in range(resolution):
             Z[i, j] = func([X[i, j], Y[i, j]])
 
@@ -434,23 +356,8 @@ def visualize_pso_2d(func, bounds, position_history, global_best_pos, title="PSO
 >>>>>>> 5907e0e (Update _pso.py):_pso.py
     colors = plt.cm.jet(np.linspace(0, 1, len(position_history)))
 
-<<<<<<< HEAD:pysolver/_pso.py
     for i in tqdm(range(len(position_history)), desc="Plotting iterations", leave=False):
         positions = position_history[i]
-||||||| parent of 5907e0e (Update _pso.py):_pso.py
-    for i, positions in enumerate(position_history):
-=======
-    pos_pbar = tqdm(
-        enumerate(position_history),
-        total=len(position_history),
-        desc="Plotting particle positions",
-        colour="cyan",
-        leave=False,
-        ncols=100
-    )
-    
-    for i, positions in pos_pbar:
->>>>>>> 5907e0e (Update _pso.py):_pso.py
         x_pos = [p[0] for p in positions]
         y_pos = [p[1] for p in positions]
 
